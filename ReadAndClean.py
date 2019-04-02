@@ -24,6 +24,11 @@ def CleanData(data):
     for i in range(3):
         ourData = ourData.drop(ourData.__len__())
 
+    # reindex data to fit indexes from 0..
+    # indexes has changed after drop and this may cause problems
+    # when operating on dataframe
+    ourData = ourData.reset_index(drop=True)
+
     # zapis danych do pliku dataCleaned
     SaveData(ourData, "dataCleanded.xlsx")
 
