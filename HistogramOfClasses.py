@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
 
-def CreateHistNSP(dataSeries):
+def CreateHistNSP(data):
     fig = plt.figure(figsize=(10, 7))
     plt.subplot(1,2,1)
-    n, bins, patches = plt.hist(dataSeries, color = 'green',  rwidth=0.9)
+    n, bins, patches = plt.hist(data, color = 'green',  rwidth=0.9)
     plt.xlabel('NSPClass')
     plt.ylabel('Number of Elements')
     plt.title('Wykres NSPClasses')
