@@ -35,8 +35,9 @@ def main():
 
 
     ourDataNormalized[['NSP','CLASS']] = pd.DataFrame(classification_columns[['NSP','CLASS']])
-    crossvalidationData = CrossValidation.crossValidation(ourDataNormalized)
-    print("c")
+    crossValidationData = CrossValidation.crossValidation(ourDataNormalized)
+
+    hoc.CreateHistAfterValidation(crossValidationData)
 
 #wywolanie funkcji main
 if __name__ == '__main__':

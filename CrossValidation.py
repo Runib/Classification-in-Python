@@ -12,11 +12,11 @@ def crossValidation(data):
     for train_index, test_index in skf.split(data, target):
         data_train_x = data_x.iloc[train_index]
         data_train_y = target.iloc[train_index]
-        data_train_x['NSP'] = data_train_y
+        data_train_x.loc[:, 'NSP'] = data_train_y
 
         data_test_x = data_x.iloc[test_index]
         data_test_y = target.iloc[test_index]
-        data_test_x['NSP'] = data_test_y
+        data_test_x.loc[:, 'NSP'] = data_test_y
 
         crossValidationData.append([data_train_x, data_test_x])
 
