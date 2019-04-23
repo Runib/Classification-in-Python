@@ -1,6 +1,4 @@
 import pandas as pd
-from openpyxl import Workbook
-import xlrd
 
 
 def ReadData():
@@ -15,7 +13,7 @@ def ReadData():
 
 def CleanData(data):
     # usuniecie odpowiednich kolumn z wartosciami nic nie znaczacymi
-    ourData = data.drop(labels=['FileName', 'Date', 'SegFile'], axis=1)
+    ourData = data.drop(labels=['FileName', 'Date', 'SegFile', 'b', 'e', 'LBE', 'DR', 'A', 'B', 'C', 'D', 'E', 'AD', 'DE', 'LD', 'FS', 'SUSP'], axis=1)
 
     # usuniecie pierwszego wiersza, nie zawiera on zadnych wartosci
     ourData = ourData.drop([0])
