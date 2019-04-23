@@ -6,7 +6,7 @@ import xlrd
 def ReadData():
     # Podanie sciezki, r powoduje ze sciezka moze byc smialo uzyto w innych funkcjach
     file = r'D:\Studia Magistreskie PK\Sieci neuronowe\Dane 2\CTG.xls'
-
+        
     # Wczytanie danych z naszego pliku i z konkretnego arkusza
     ourData = pd.read_excel(file, sheet_name='Raw Data')
 
@@ -36,3 +36,13 @@ def CleanData(data):
 
 def SaveData(data, name):
     data.to_excel(name, sheet_name="Data1", index=False)
+
+
+def extractAttributes(data):
+    attributeNames = ['LB', 'AC', 'FM', 'UC', 'DL', 'DS', 'DP', 'ASTV', 'MSTV', 'ALTV',
+                      'MLTV', 'Width', 'Min', 'Max', 'Nmax', 'Nzeros', 'Mode', 'Mean',
+                      'Median', 'Variance', 'Tendency']
+
+    attributes = data.loc[:, attributeNames]
+
+    return attributes
