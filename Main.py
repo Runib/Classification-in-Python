@@ -10,6 +10,7 @@ from LDA import *
 from PCA import *
 from Normalization import Normalizer
 import Plot
+import RandomForestClassification as rfc
 
 
 def main():
@@ -60,25 +61,60 @@ def main():
     #hoc.CreateHistAfterValidationNSP(crossValidationDataNSP, ourData['NSP'])
     #hoc.CreateHistAfterValidationCLASS(crossValidationDataCLASS, ourData['CLASS'])
 
+    #Data without LDA and normalization
+    allClassification(ourData, classification_columns, nameOfNSP, nameOfCLASS)
 
-    #y_pred_nps = mysvm.svmClassificationSimple(ourData,classification_columns,'NSP')
-    #y_pred_class = mysvm.svmClassificationSimple(ourData,classification_columns,'CLASS')
-    #mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_nps,classes=nameOfNSP)
-    #mysvm.plot_confusion_matrix(y_true=classification_columns['CLASS'].values, y_pred=y_pred_class,classes=nameOfCLASS)
-    score_nps = mysvm.svmClassificationSimpleScore(ourData,classification_columns, 'NSP')
-    print(str(score_nps*100) + "% skutecznosci svm")
-    # y_pred_nps = mysvm.svmClassificationSimple(ourDataNormalized, classification_columns, 'NSP')
-    # y_pred_class = mysvm.svmClassificationSimple(ourDataNormalized, classification_columns, 'CLASS')
-    # mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_nps, classes=nameOfNSP)
-    # mysvm.plot_confusion_matrix(y_true=classification_columns['CLASS'].values, y_pred=y_pred_class, classes=nameOfCLASS)
+    #Data with LDA and normalization
 
-    y_pred_knn_nsp = knn.kNNClass(ourData,classification_columns,'NSP')
-    mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_knn_nsp,classes=nameOfNSP, normalize=True)
+
+def allClassification(ourData, classification_columns, nameOfNSP, nameOfCLASS):
+    # SVM
+    y_pred_nps, y_score_nps = mysvm.svmClassificationSimple(ourData, classification_columns, 'NSP')
+    y_pred_class, y_score_class = mysvm.svmClassificationSimple(ourData, classification_columns, 'CLASS')
+    print(y_score_nps, y_score_class)
+
+    f1_svm_nsp = mysvm.getInfoMatrix(classification_columns, y_pred_nps, 'NSP')
+    f1_svm_class = mysvm.getInfoMatrix(classification_columns, y_pred_class, 'CLASS')
+
+    mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_nps, classes=nameOfNSP,
+                                normalize=True)
+    mysvm.plot_confusion_matrix(y_true=classification_columns['CLASS'].values, y_pred=y_pred_class, classes=nameOfCLASS,
+                                normalize=True)
+
+
+    # KNN
+    y_pred_knn_nsp, y_score_knn_nsp = knn.kNNClass(ourData, classification_columns, 'NSP')
+    y_pred_knn_class, y_score_knn_class = knn.kNNClass(ourData, classification_columns, 'CLASS')
+    print(y_score_knn_nsp, y_score_knn_class)
+
+    f1_knn_nsp = mysvm.getInfoMatrix(classification_columns, y_pred_knn_nsp, 'NSP')
+    f1_knn_class = mysvm.getInfoMatrix(classification_columns, y_pred_knn_class, 'CLASS')
+
+    mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_knn_nsp, classes=nameOfNSP,
+                                normalize=True)
+    mysvm.plot_confusion_matrix(y_true=classification_columns['CLASS'].values, y_pred=y_pred_knn_class,
+                                classes=nameOfCLASS, normalize=True)
+
+    # Random Forest
+    y_pred_rf_nsp, y_score_rf_nsp = rfc.randomForest(ourData, classification_columns, 'NSP')
+    y_pred_rf_class, y_score_rf_class = rfc.randomForest(ourData, classification_columns, 'CLASS')
+    print(y_score_rf_nsp, y_score_rf_class)
+
+    f1_rf_nsp = mysvm.getInfoMatrix(classification_columns, y_pred_rf_nsp, 'NSP')
+    f1_rf_class = mysvm.getInfoMatrix(classification_columns, y_pred_rf_class, 'CLASS')
+
+    mysvm.plot_confusion_matrix(y_true=classification_columns['NSP'].values, y_pred=y_pred_rf_nsp, classes=nameOfNSP,
+                                normalize=True)
+    mysvm.plot_confusion_matrix(y_true=classification_columns['CLASS'].values, y_pred=y_pred_rf_class,
+                                classes=nameOfCLASS, normalize=True)
+
+    print("F1 dla NSP/SVM: \n" + str(f1_svm_nsp))
+    print("F1 dla CLASS/SVM: \n" + str(f1_svm_class))
+    print("F1 dla NSP/KNN: \n" + str(f1_knn_nsp))
+    print("F1 dla CLASS/KNN: \n" + str(f1_knn_class))
+    print("F1 dla NSP/RF: \n" + str(f1_rf_nsp))
+    print("F1 dla CLASS/RF: \n" + str(f1_rf_class))
     plt.show()
-    score_knn_nps = knn.kNNClassScore(ourData,classification_columns, 'NSP')
-    print(str(score_knn_nps*100) + "% skutecznosci knn")
-
-
 
 #wywolanie funkcji main
 if __name__ == '__main__':

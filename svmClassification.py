@@ -6,18 +6,26 @@ from sklearn.metrics import confusion_matrix
 from sklearn.utils.multiclass import unique_labels
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import classification_report
 
 
 def svmClassificationSimple(dataValTrain, dataValTest, nameOfClass):
-    clf = svm.SVC(kernel='linear', C=10)
+    clf = svm.SVC(kernel='linear', C=1)
     y_pred = cross_val_predict(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
-    return y_pred
+    y_score = cross_val_score(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
+    return y_pred, y_score.mean()
 
-def svmClassificationSimpleScore(dataValTrain, dataValTest, nameOfClass):
-    clf = svm.SVC(kernel='linear', C=10)
-    y_pred = cross_val_score(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
-    return y_pred.mean()
+def svmClassificationSimpleRBF(dataValTrain, dataValTest, nameOfClass):
+    clf = svm.SVC(kernel='rbf', C=1, gamma='auto')
+    y_pred = cross_val_predict(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
+    y_score = cross_val_score(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
+    return y_pred, y_score.mean()
 
+def svmClassificationSimplePOLY(dataValTrain, dataValTest, nameOfClass):
+    clf = svm.SVC(kernel='poly', C=1, gamma=1)
+    y_pred = cross_val_predict(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
+    y_score = cross_val_score(clf, dataValTrain.values, dataValTest[nameOfClass].values, cv=10)
+    return y_pred, y_score.mean()
 
 def plot_confusion_matrix(y_true, y_pred, classes,
                           normalize=False,
@@ -42,8 +50,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
         print("Normalized confusion matrix")
     else:
         print('Confusion matrix, without normalization')
-
-    print(cm.shape)
 
     fig, ax = plt.subplots()
     im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
@@ -73,3 +79,6 @@ def plot_confusion_matrix(y_true, y_pred, classes,
     return ax
 
 
+def getInfoMatrix(dataValTest, y_pred, nameOfClass):
+    y_true = dataValTest[nameOfClass].values
+    return classification_report(y_true, y_pred)
