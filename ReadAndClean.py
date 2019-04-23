@@ -5,8 +5,8 @@ import xlrd
 
 def ReadData():
     # Podanie sciezki, r powoduje ze sciezka moze byc smialo uzyto w innych funkcjach
-    file = r'C:\Users\Pawel1\Desktop\MOW\CTG.xls'
-
+    file = r'D:\Studia Magistreskie PK\Sieci neuronowe\Dane 2\CTG.xls'
+        
     # Wczytanie danych z naszego pliku i z konkretnego arkusza
     ourData = pd.read_excel(file, sheet_name='Raw Data')
 
