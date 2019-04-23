@@ -11,7 +11,7 @@ def CreateHistNSP(data):
     plt.ylabel('Number of Elements')
     plt.title('Wykres NSPClasses')
     plt.grid(True)
-    plt.xticks(np.arange(3)+1, ['1', '2', '3'])
+    plt.xticks(np.arange(3)+1, ['Normal', 'Suspect', 'Pathologic'])
 
     for i in patches:
         if i.get_height() > 0:
@@ -25,7 +25,7 @@ def CreateHistClass(dataSeries):
     plt.ylabel('Number of Elements')
     plt.title('Wykres Class')
     plt.grid(True)
-    plt.xticks(np.arange(10)+1, ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
+    plt.xticks(np.arange(10)+1, ['A', 'B', 'C', 'D', 'SH', 'AD', 'DE', 'LD', 'FS', 'SUSP'])
 
     for i in patches:
         if i.get_height() > 0:
@@ -33,40 +33,70 @@ def CreateHistClass(dataSeries):
                  str(i.get_height()), fontsize=9, color = 'dimgrey')
     plt.show()
 
-def CreateHistAfterValidation(dataValidation):
-    fig = plt.figure(figsize=(15, 15))
+def CreateHistAfterValidationNSP(dataValidation, originalData):
+
     i = 1
+    fig = []
+    N = 3
+    ind = np.arange(N)
+    width = 0.27
 
     for dataVal in dataValidation:
-        plt.subplot(2, 5, i)
-        n, bins, patches = plt.hist(dataVal[0]['NSP'], color='green', rwidth=0.9)
-        plt.xlabel('NSPClass')
+        fig.append(plt.figure(i))
+        value1 = list(dataVal[0].NSP.sort_values().value_counts(sort=False))
+        value2 = list(dataVal[1 ].NSP.sort_values().value_counts(sort=False))
+        value3 = list(originalData.sort_values().value_counts(sort=False))
+        patches1 = plt.bar(ind, value3, width, label="original")
+        patches2 = plt.bar(ind + width, value1, width, label = "train")
+        patches3 = plt.bar(ind + width * 2, value2, width, label="test")
+
         plt.ylabel('Elements')
         plt.title('Group' + str(i))
-        i = i + 1
         plt.grid(True)
-        plt.xticks(np.arange(3) + 1, ['1', '2', '3'])
-        for j in patches:
-            if j.get_height() > 0:
-                plt.text(j.get_x() - .03, j.get_height() + .9, \
-                         str(j.get_height()), fontsize=8, color='dimgrey')
+        plt.xticks(ind + width / 2, ['Normal', 'Suspect', 'Pathologic'])
+        plt.legend(loc='best')
+        autolabel(patches1)
+        autolabel(patches2)
+        autolabel(patches3)
+        i = i +1
 
     plt.show()
 
-    fig = plt.figure(figsize=(15, 15))
+
+def CreateHistAfterValidationCLASS(dataValidation, originalData):
+
     i = 1
+    fig = []
+    N = 10
+    ind = np.arange(N)
+    width = 0.27
+
     for dataVal in dataValidation:
-        plt.subplot(2, 5, i)
-        n, bins, patches = plt.hist(dataVal[1]['NSP'], color='green', rwidth=0.9)
-        plt.xlabel('NSPClass')
+        fig.append(plt.figure(i, figsize=(10,10)))
+        value1 = list(dataVal[0].CLASS.sort_values().value_counts(sort=False))
+        value2 = list(dataVal[1 ].CLASS.sort_values().value_counts(sort=False))
+        value3 = list(originalData.sort_values().value_counts(sort=False))
+        patches1 = plt.bar(ind, value3, width, label="original")
+        patches2 = plt.bar(ind + width, value1, width, label = "train")
+        patches3 = plt.bar(ind + width * 2, value2, width, label="test")
+
         plt.ylabel('Elements')
         plt.title('Group' + str(i))
-        i = i + 1
         plt.grid(True)
-        plt.xticks(np.arange(3) + 1, ['1', '2', '3'])
-        for j in patches:
-            if j.get_height() > 0:
-                plt.text(j.get_x() - .03, j.get_height() + .9, \
-                         str(j.get_height()), fontsize=8, color='dimgrey')
+        plt.xticks(ind + width / 2, ['A', 'B', 'C', 'D', 'SH', 'AD', 'DE', 'LD', 'FS', 'SUSP'])
+        plt.legend(loc='best')
+        autolabel(patches1)
+        autolabel(patches2)
+        autolabel(patches3)
+        i = i +1
+
     plt.show()
+
+
+
+def autolabel(patches):
+    for patch in patches:
+        if patch.get_height() > 0:
+            plt.text(patch.get_x() + .05, patch.get_height() + 4, \
+                     str(patch.get_height()), fontsize = 10, color ='dimgrey')
 
