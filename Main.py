@@ -7,6 +7,7 @@ import svmClassification as mysvm
 import matplotlib.pyplot as plt
 import pandas as pd
 from LDA import *
+from Optimization import svmOptimization
 from PCA import *
 from Normalization import Normalizer
 import Plot
@@ -42,17 +43,17 @@ def main():
 
     # transform data with PCA and plot results
     dataTransformedPCA = transformPCA(normalizer.standarizeStandard(ourData))
-    Plot.scatterPlotNSP(dataTransformedPCA, ourData['NSP'])
-    Plot.scatterPlotCLASS(dataTransformedPCA, ourData['CLASS'])
+    #Plot.scatterPlotNSP(dataTransformedPCA, ourData['NSP'])
+    #Plot.scatterPlotCLASS(dataTransformedPCA, ourData['CLASS'])
 
     # transform data with LDA and plot results
-    dataTransformedLDA = transformLDA(ourData, 'NSP')
-    Plot.scatterPlotNSP(dataTransformedLDA, ourData['NSP'])
-    dataTransformedLDA = transformLDA(ourData, 'CLASS')
-    Plot.scatterPlotCLASS(dataTransformedLDA, ourData['CLASS'])
+    #ourData = transformLDA(ourData, 'NSP')
+    #Plot.scatterPlotNSP(dataTransformedLDA, ourData['NSP'])
+    #dataTransformedLDA = transformLDA(ourData, 'CLASS')
+    #Plot.scatterPlotCLASS(dataTransformedLDA, ourData['CLASS'])
 
     # plot heatmap - correlation between data and
-    Plot.heatmap(ourDataNormalized)
+    #Plot.heatmap(ourDataNormalized)
 
 
     ourDataNormalized = ourDataNormalized.drop(labels=['CLASS','NSP'],axis=1)
@@ -60,6 +61,8 @@ def main():
     #crossValidationDataCLASS = CrossValidation.crossValidationCLASS(ourDataNormalized)
     #hoc.CreateHistAfterValidationNSP(crossValidationDataNSP, ourData['NSP'])
     #hoc.CreateHistAfterValidationCLASS(crossValidationDataCLASS, ourData['CLASS'])
+
+    svmOptimization(ourData,classification_columns,'NSP')
 
     #Data without LDA and normalization
     allClassification(ourData, classification_columns, nameOfNSP, nameOfCLASS)
